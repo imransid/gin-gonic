@@ -7,56 +7,116 @@ import (
 	"fmt"
 )
 
+type uriBinding struct {
+	ID string `uri:"id"`
+}
+
+type Product struct {
+	ID string `json:"id"`
+	Name string `json:"name"`
+}
+
+
+type ProductForm struct {
+	ID string `form:"id"`
+	Name string `form:"name"`
+}
+
+type headerBinding struct {
+	RequestID string `header:"X-Request-ID"`
+}
+
 
 func main() {
 	var router = gin.Default()
 	var address  = ":3000" 
 
 
-	// c.Param
+	// c.ShouldBindUri
 
-	router.GET("product/:id", func(c *gin.Context){
-		var id = c.Param("id")
+	router.GET("modelBinding/:id", func(c *gin.Context){
+		
+		var binding uriBinding
+		
+		if e := c.ShouldBindUri(&binding); e != nil {
 
-		c.String(http.StatusOK, "ID is ", id)
+			c.String(http.StatusBadRequest, e.Error())
+			return
+
+		}
+
+		fmt.Println("binding is > ", binding)
+		c.String(http.StatusOK, "Model Binding")
+
+	})
+
+
+
+
+	// c.ShouldBindJSON
+
+	router.POST("productBinding/:id", func(c *gin.Context){
+		
+		var product Product
+		
+		if e := c.ShouldBindJSON(&product); e != nil {
+
+			c.String(http.StatusBadRequest, e.Error())
+			return
+
+		}
+
+		fmt.Println("product is > ", product)
+		c.String(http.StatusOK, "Model Binding")
 
 	})
 
 
-	// c.Query
-	router.GET("productQuery/:id", func(c *gin.Context){
-		var id = c.Query("id")
-		var idDefaultValue = c.DefaultQuery("id_is", "12")
 
-		fmt.Println("ID : ", id , "Default", idDefaultValue)
+	// c.ShouldBind     form data
 
-		c.String(http.StatusOK, "ID")
 
-	})
-	 
+	router.POST("modelFormBinding/:id", func(c *gin.Context){
+		
+		var productForm ProductForm
+		
+		if e := c.ShouldBind(&productForm); e != nil {
 
-	// c.PostForm
+			c.String(http.StatusBadRequest, e.Error())
+			return
 
-	router.POST("productQuery/:id", func(c *gin.Context){
-		var id = c.PostForm("id")
-		var idDefaultValue = c.DefaultPostForm("id_is", "12")
+		}
 
-		fmt.Println("ID : ", id , "Default  : ", idDefaultValue)
-
-		c.String(http.StatusOK, "ID")
+		fmt.Println("product is > ", productForm)
+		c.String(http.StatusOK, "Model Binding")
 
 	})
 
-	// c.GetHeader
 
-	router.POST("productHeaderQuery/:id", func(c *gin.Context){
-		var id = c.GetHeader("id")
 
-		fmt.Println("ID : ", id )
 
-		c.String(http.StatusOK, "ID")
+	// c.ShouldBindheader
+
+	router.POST("modelHeaderBinding/:id", func(c *gin.Context){
+		
+		var product headerBinding
+		
+		if e := c.ShouldBindHeader(&product); e != nil {
+
+			c.String(http.StatusBadRequest, e.Error())
+			return
+
+		}
+
+		fmt.Println("product is > ", product)
+		c.String(http.StatusOK, "Model Binding")
 
 	})
+
+	
+
+
+ 
 
 
 

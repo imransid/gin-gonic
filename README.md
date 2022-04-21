@@ -1,5 +1,7 @@
 # All copy@right goes by https://www.youtube.com/watch?v=N14HOh10ghY&t=1001s
 
+> > > > > > > > > air
+
 ## create go module
 
 -> go mod init moduleName
@@ -13,3 +15,7 @@
 https://iaziz786.com/blog/golang-auto-reload-apps
 
 autoLoad application
+
+# get Doc
+
+-> go doc gin.Context.Query

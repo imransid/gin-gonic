@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"fmt"
 )
 
 
@@ -12,22 +13,52 @@ func main() {
 	var address  = ":3000" 
 
 
-	var v1 = router.Group("/api/v1")
+	// c.Param
 
-	v1.GET("/hello",  func(c *gin.Context){
-		c.String(http.StatusOK, " Hi I M From V1")
+	router.GET("product/:id", func(c *gin.Context){
+		var id = c.Param("id")
+
+		c.String(http.StatusOK, "ID is ", id)
+
 	})
 
-	var v2 = router.Group("/api/v2")
 
-	v2.GET("/hello",  func(c *gin.Context){
-		c.String(http.StatusOK, " Hi I M From V2")
+	// c.Query
+	router.GET("productQuery/:id", func(c *gin.Context){
+		var id = c.Query("id")
+		var idDefaultValue = c.DefaultQuery("id_is", "12")
+
+		fmt.Println("ID : ", id , "Default", idDefaultValue)
+
+		c.String(http.StatusOK, "ID")
+
+	})
+	 
+
+	// c.PostForm
+
+	router.POST("productQuery/:id", func(c *gin.Context){
+		var id = c.PostForm("id")
+		var idDefaultValue = c.DefaultPostForm("id_is", "12")
+
+		fmt.Println("ID : ", id , "Default  : ", idDefaultValue)
+
+		c.String(http.StatusOK, "ID")
+
 	})
 
-	router.GET(
-		"/hello", func(c *gin.Context){
-			c.String(http.StatusOK, "hello world ...")
-		})
+	// c.GetHeader
+
+	router.POST("productHeaderQuery/:id", func(c *gin.Context){
+		var id = c.GetHeader("id")
+
+		fmt.Println("ID : ", id )
+
+		c.String(http.StatusOK, "ID")
+
+	})
+
+
 
 	log.Fatalln(router.Run(address))
 

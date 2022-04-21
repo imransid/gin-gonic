@@ -7,3 +7,9 @@
 ## get gin framework
 
 -> go get -u "github.com/gin-gonic/gin"
+
+<!-- TIPS -->
+
+https://iaziz786.com/blog/golang-auto-reload-apps
+
+autoLoad application
